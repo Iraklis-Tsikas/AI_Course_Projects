@@ -1,0 +1,192 @@
+<section class="section journey" id="journey" aria-labelledby="journey-title">
+  <div class="container">
+    <app-section-head index="02" label="Career Journey" />
+
+    <div class="journey__intro">
+      <h2 id="journey-title" class="display" appReveal>
+        Twelve roles.<br />
+        <span class="serif">One</span> trajectory<span class="accent">.</span>
+      </h2>
+      <p class="lede journey__lede" appReveal [revealDelay]="120">
+        Engineering lab, Navy deck, warehouse floor, banking codebase. Every stop added something the next one needed —
+        here is the whole route, mapped.
+      </p>
+    </div>
+
+    <!-- Career map ------------------------------------------------------------------>
+    <figure class="map" appReveal aria-labelledby="map-caption">
+      <figcaption class="map__head">
+        <div class="map__title">
+          <span class="mono map__kicker">Fig. 01</span>
+          <span id="map-caption" class="map__caption">Career map, {{ years[0] }} → Now</span>
+        </div>
+        <div class="map__legend" role="group" aria-label="Highlight by category">
+          @for (c of categories; track c) {
+            <button
+              type="button"
+              class="legend"
+              [class]="'legend legend--' + c"
+              [class.is-active]="focusCategory() === c"
+              (mouseenter)="focusCategory.set(c)"
+              (mouseleave)="focusCategory.set(null)"
+              (focus)="focusCategory.set(c)"
+              (blur)="focusCategory.set(null)"
+            >
+              <span class="legend__swatch" aria-hidden="true"></span>
+              {{ categoryLabel[c] }}
+              <span class="legend__count mono">{{ countFor(c) }}</span>
+            </button>
+          }
+        </div>
+      </figcaption>
+
+      <div class="map__scroll">
+        <div class="map__plot" (mouseleave)="hovered.set(null)">
+          <div class="map__axis" aria-hidden="true">
+            @for (y of years; track y; let i = $index, last = $last) {
+              <span class="map__year" [style.left.%]="(i / (years.length - 1)) * 100" [class.is-odd]="y % 2 === 1" [class.is-last]="$last">
+                {{ y }}
+              </span>
+            }
+          </div>
+
+          <div class="map__gridlines" aria-hidden="true">
+            @for (y of years; track y; let i = $index) {
+              <span [style.left.%]="(i / (years.length - 1)) * 100"></span>
+            }
+            <span class="map__now" [style.left.%]="nowPos"><em class="mono">Now</em></span>
+          </div>
+
+          <ul class="map__rows">
+            @for (row of rows; track row.id) {
+              <li class="map__row" [class.is-dim]="isDimmed(row)" [class.is-hot]="hovered() === row.id">
+                <span class="map__label">{{ row.label }}</span>
+                <span class="map__track">
+                  <button
+                    type="button"
+                    class="map__bar"
+                    [class]="'map__bar map__bar--' + row.category"
+                    [class.is-current]="row.current"
+                    [class.is-clipped]="row.clipped"
+                    [style.left.%]="row.left"
+                    [style.width.%]="row.width"
+                    [attr.aria-label]="row.heading + ', ' + row.sub + ', ' + row.period"
+                    (mouseenter)="hovered.set(row.id)"
+                    (focus)="hovered.set(row.id)"
+                    (blur)="hovered.set(null)"
+                    (click)="jump(row)"
+                  ></button>
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="map__readout mono" aria-live="polite">
+        @if (readout(); as r) {
+          <span class="map__readout-key accent">▸ {{ r.label }}</span>
+          <span class="map__readout-main">{{ r.heading }} — {{ r.sub }}</span>
+          <span class="map__readout-dim">{{ r.period }}</span>
+          @if (r.duration) {
+            <span class="map__readout-dim">{{ r.duration }}</span>
+          }
+          <span class="map__readout-cta">Click to jump ↵</span>
+        } @else {
+          <span class="map__readout-key">▸ idle</span>
+          <span class="map__readout-dim">Hover or tab through the bars to inspect · {{ rows.length }} records</span>
+        }
+      </div>
+    </figure>
+
+    <!-- Chapters -------------------------------------------------------------------->
+    <div class="chapters">
+      @for (chapter of chapters; track chapter.index) {
+        <section class="chapter" [attr.aria-labelledby]="'chapter-' + chapter.index">
+          <header class="chapter__head">
+            <div class="chapter__sticky">
+              <span class="chapter__num" aria-hidden="true">{{ chapter.index }}</span>
+              <span class="mono chapter__kicker">
+                Chapter {{ chapter.index }} <span class="chapter__sep">/</span> {{ chapter.period }}
+              </span>
+              <h3 class="chapter__title" [id]="'chapter-' + chapter.index">{{ chapter.title }}</h3>
+              <p class="chapter__summary">{{ chapter.summary }}</p>
+            </div>
+          </header>
+
+          <ol class="chapter__roles">
+            @for (role of chapter.roles; track role.id) {
+              <li
+                class="entry"
+                [id]="'role-' + role.id"
+                [class.is-current]="!role.end"
+                [class.is-flash]="flash() === role.id"
+                appReveal
+              >
+                <div class="entry__when mono">
+                  <span>{{ role.when }}</span>
+                  <span class="entry__dur">{{ role.duration }}</span>
+                </div>
+                <div class="entry__main">
+                  <div class="entry__titlebar">
+                    <h4 class="entry__title">{{ role.title }}</h4>
+                    @if (!role.end) {
+                      <span class="pill pill--now"><span class="live-dot"></span>Current</span>
+                    }
+                  </div>
+                  <div class="entry__company">
+                    {{ role.company }}
+                    @if (role.location) {
+                      <span class="entry__loc">· {{ role.location }}</span>
+                    }
+                  </div>
+                  @if (role.note) {
+                    <p class="entry__note">{{ role.note }}</p>
+                  }
+                  @if (role.tags?.length) {
+                    <div class="entry__tags">
+                      @for (tag of role.tags; track tag) {
+                        <span class="entry__tag">{{ tag }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </li>
+            }
+          </ol>
+        </section>
+      }
+    </div>
+
+    <!-- Education & certifications --------------------------------------------------->
+    <div class="edu" id="education">
+      <div class="edu__head" appReveal>
+        <span class="mono edu__kicker">Foundations</span>
+        <h3 class="edu__title">Education <span class="serif">&amp;</span> certifications</h3>
+      </div>
+
+      <div class="edu__grid">
+        @for (e of education; track e.id; let i = $index) {
+          <article class="edu-card" appReveal [revealDelay]="i * 100">
+            <span class="edu-card__index mono">0{{ i + 1 }}</span>
+            <span class="edu-card__period mono">{{ e.period }}</span>
+            <h4 class="edu-card__degree">{{ e.degree }}</h4>
+            <p class="edu-card__school">{{ e.school }}</p>
+            <span class="edu-card__glyph" aria-hidden="true">{{ i === 0 ? '{ }' : '≈' }}</span>
+          </article>
+        }
+
+        <article class="edu-card edu-card--cert" appReveal [revealDelay]="200">
+          <span class="edu-card__index mono">0{{ education.length + 1 }}</span>
+          <span class="edu-card__period mono">Certification track</span>
+          <h4 class="edu-card__degree">{{ certs.title }}</h4>
+          <ul class="cert-list">
+            @for (c of certs.courses; track c) {
+              <li><span class="cert-list__tick" aria-hidden="true">✓</span>{{ c }}</li>
+            }
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

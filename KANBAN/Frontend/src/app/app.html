@@ -1,0 +1,15 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>
+    <div>
+      <h1>Kanban</h1>
+      <p class="subtitle">{{ totalCards() }} cards across {{ store.columns().length }} stages</p>
+    </div>
+  </div>
+</header>
+
+<main class="board" cdkDropListGroup>
+  @for (column of store.columns(); track column.id) {
+    <app-column [column]="column" />
+  }
+</main>

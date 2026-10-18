@@ -1,0 +1,98 @@
+<header
+  class="nav"
+  [class.is-scrolled]="scrolled()"
+  [class.is-hidden]="hidden()"
+  [class.is-menu]="menuOpen()"
+>
+  <div class="nav__progress" #progress aria-hidden="true"></div>
+
+  <div class="container nav__inner">
+    <a class="logo" href="/" (click)="nav.go('top', $event)" aria-label="Iraklis Tsikas — back to top">
+      <span class="logo__mark" aria-hidden="true">IT<span class="logo__dot"></span></span>
+      <span class="logo__text">
+        <span class="logo__name">{{ profile.first }} {{ profile.last }}</span>
+        <span class="logo__role">{{ profile.role }}</span>
+      </span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      @for (item of items; track item.id) {
+        <a
+          class="nav__link"
+          [href]="'#' + item.id"
+          (click)="nav.go(item.id, $event)"
+          [class.is-active]="nav.active() === item.id"
+          [attr.aria-current]="nav.active() === item.id ? 'location' : null"
+        >
+          <span class="nav__idx">{{ item.index }}</span>
+          <span class="nav__label">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="nav__actions">
+      <span class="nav__clock mono" title="Local time in Athens">
+        <span class="nav__clock-dot" aria-hidden="true"></span>ATH {{ clock.shortTime() }}
+      </span>
+
+      <button type="button" class="icon-btn icon-btn--kbd" (click)="palette.open()" aria-label="Open command menu">
+        <kbd>{{ isMac ? '⌘' : 'Ctrl' }}</kbd><kbd>K</kbd>
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+      >
+        <span class="theme-icon" [class.is-light]="theme.theme() === 'light'" aria-hidden="true">
+          <svg class="theme-icon__moon" viewBox="0 0 24 24" width="18" height="18">
+            <path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z" />
+          </svg>
+          <svg class="theme-icon__sun" viewBox="0 0 24 24" width="18" height="18">
+            <circle cx="12" cy="12" r="4.2" />
+            <path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" />
+          </svg>
+        </span>
+      </button>
+
+      <a class="btn btn--primary nav__cta" href="#contact" (click)="nav.go('contact', $event)">
+        Let's talk <span class="btn__arrow">→</span>
+      </a>
+
+      <button
+        type="button"
+        class="burger"
+        (click)="menuOpen.set(!menuOpen())"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-menu"
+        [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="mobile-menu" [class.is-open]="menuOpen()" [attr.inert]="menuOpen() ? null : ''">
+  <div class="container menu__inner">
+    <nav class="menu__links" aria-label="Mobile">
+      @for (item of items; track item.id; let i = $index) {
+        <a
+          class="menu__link"
+          [href]="'#' + item.id"
+          (click)="goMobile(item.id, $event)"
+          [style.--i]="i"
+        >
+          <span class="menu__idx mono">{{ item.index }}</span>
+          <span class="menu__label">{{ item.label }}</span>
+          <span class="menu__arrow" aria-hidden="true">↗</span>
+        </a>
+      }
+    </nav>
+    <div class="menu__foot mono">
+      <a [href]="'mailto:' + profile.email">{{ profile.email }}</a>
+      <span>{{ profile.location }} · {{ clock.shortTime() }}</span>
+    </div>
+  </div>
+</div>

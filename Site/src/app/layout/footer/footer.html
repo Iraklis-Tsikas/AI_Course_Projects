@@ -1,0 +1,47 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__intro">
+        <p class="footer__statement">
+          Dependable software,<br />
+          built <span class="serif">the long way round.</span>
+        </p>
+      </div>
+
+      <nav class="footer__col" aria-label="Footer">
+        <span class="footer__label mono">Index</span>
+        @for (item of items; track item.id) {
+          <a class="footer__link" [href]="'#' + item.id" (click)="nav.go(item.id, $event)">{{ item.label }}</a>
+        }
+      </nav>
+
+      <div class="footer__col">
+        <span class="footer__label mono">Elsewhere</span>
+        <a class="footer__link" [href]="profile.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="footer__link" [href]="profile.links.github" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="footer__link" [href]="'mailto:' + profile.email">Email ↗</a>
+      </div>
+
+      <div class="footer__col">
+        <span class="footer__label mono">Local time</span>
+        <span class="footer__time">{{ clock.time() }}</span>
+        <span class="footer__muted">{{ profile.location }}</span>
+        <span class="footer__muted mono">{{ profile.coords }}</span>
+      </div>
+    </div>
+
+    <div class="footer__word" aria-hidden="true">
+      <svg viewBox="0 0 1000 152" preserveAspectRatio="none">
+        <text x="0" y="132" textLength="1000" lengthAdjust="spacingAndGlyphs">IRAKLIS TSIKAS</text>
+      </svg>
+    </div>
+
+    <div class="footer__bottom mono">
+      <span>© {{ year }} {{ profile.first }} {{ profile.last }}</span>
+      <span class="footer__built">Engineered with Angular {{ ngVersion }} · Athens, GR</span>
+      <button type="button" class="footer__top" (click)="nav.go('top')">
+        Back to top <span aria-hidden="true">↑</span>
+      </button>
+    </div>
+  </div>
+</footer>

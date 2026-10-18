@@ -1,0 +1,105 @@
+<section class="section about" id="about" aria-labelledby="about-title">
+  <div class="container">
+    <app-section-head index="01" label="About" />
+
+    <div class="about__grid">
+      <div class="about__badge-col" appReveal>
+        <div class="lanyard" aria-hidden="true">
+          <span class="lanyard__strap"></span>
+          <span class="lanyard__clip"></span>
+        </div>
+
+        <figure class="idcard" [appTilt]="14" aria-label="Profile card">
+          <div class="idcard__band">
+            <span>Engineering</span>
+            <span class="idcard__chip" aria-hidden="true"></span>
+          </div>
+
+          <div class="idcard__body">
+            <div class="idcard__monogram" aria-hidden="true">IT<span>.</span></div>
+            <div class="idcard__name">{{ profile.first }}<br />{{ profile.last }}</div>
+            <div class="idcard__role">{{ profile.role }}</div>
+
+            <dl class="idcard__fields">
+              <div><dt>Org</dt><dd>Natech Banking</dd></div>
+              <div><dt>Base</dt><dd>Athens, GR</dd></div>
+              <div><dt>Since</dt><dd>{{ since }}</dd></div>
+              <div><dt>Lang</dt><dd>EL · EN</dd></div>
+            </dl>
+          </div>
+
+          <div class="idcard__foot">
+            <span class="idcard__barcode" aria-hidden="true"></span>
+            <span class="idcard__serial">SE-{{ since }}-0IT</span>
+          </div>
+
+          <span class="idcard__holo" aria-hidden="true"></span>
+          <span class="idcard__glare" aria-hidden="true"></span>
+        </figure>
+        <p class="about__badge-hint mono" aria-hidden="true">↖ Hover the card</p>
+      </div>
+
+      <div class="about__content">
+        <h2 id="about-title" class="display about__title" appReveal>
+          I took the <span class="serif accent">long way</span> into software — and it made me a sharper engineer.
+        </h2>
+
+        <div class="about__body">
+          <p appReveal [revealDelay]="80">
+            I'm a software engineer based in Athens, currently building software for the banking sector at
+            <strong>{{ profile.company }}</strong>. I work mostly in <strong>C#</strong> and
+            <strong>TypeScript</strong>, and I care about what makes enterprise software trustworthy: correctness,
+            clarity, and code the next engineer can pick up without a map.
+          </p>
+          <p appReveal [revealDelay]="140">
+            My route here wasn't linear. I trained in natural resources and agricultural engineering, where I built
+            automated control systems for hydroponics. I served in the Hellenic Navy aboard a tank landing ship, then
+            spent years in warehouses and on retail floors at METRO, Mart, Leroy Merlin and Lidl — learning first-hand
+            how real operations behave under pressure.
+          </p>
+          <p appReveal [revealDelay]="200">
+            In 2020 I went back to university for an MSc in Informatics at the University of Piraeus. By late 2021 I was
+            writing production software for a living — and I haven't looked back since.
+          </p>
+        </div>
+
+        <dl class="about__facts" appReveal [revealDelay]="120">
+          <div class="fact">
+            <dt class="mono">Currently</dt>
+            <dd>{{ profile.role }}, {{ profile.company }}</dd>
+          </div>
+          <div class="fact">
+            <dt class="mono">Based in</dt>
+            <dd>{{ profile.location }}</dd>
+          </div>
+          <div class="fact">
+            <dt class="mono">Education</dt>
+            <dd>MSc Informatics — University of Piraeus</dd>
+          </div>
+          <div class="fact">
+            <dt class="mono">Languages</dt>
+            <dd>
+              @for (lang of profile.languages; track lang.name; let last = $last) {
+                {{ lang.name }} <span class="fact__dim">({{ lang.level }})</span>{{ last ? '' : ' · ' }}
+              }
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="about__stats">
+      @for (stat of stats; track stat.label; let i = $index) {
+        <div class="stat" appReveal [revealDelay]="i * 90">
+          <div class="stat__value">
+            <span [appCountUp]="stat.value"></span>
+            @if (stat.plus) {
+              <span class="stat__plus">+</span>
+            }
+          </div>
+          <div class="stat__label">{{ stat.label }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

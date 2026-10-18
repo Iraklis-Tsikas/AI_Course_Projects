@@ -1,0 +1,154 @@
+<section class="section toolbox" id="toolbox" aria-labelledby="toolbox-title">
+  <div class="container">
+    <app-section-head index="03" label="Toolbox" />
+
+    <div class="toolbox__intro">
+      <h2 id="toolbox-title" class="display" appReveal>
+        The <span class="serif">stack</span>, and the<br />
+        way I think<span class="accent">.</span>
+      </h2>
+      <p class="lede" appReveal [revealDelay]="120">
+        Strongly-typed languages, disciplined version control, and a habit of treating every system — a greenhouse
+        controller or a banking platform — as inputs, state and failure modes.
+      </p>
+    </div>
+
+    <div class="bento">
+      <!-- Editor ------------------------------------------------------------------>
+      <article class="tile tile--editor" appSpotlight appReveal>
+        <div class="editor">
+          <div class="editor__chrome">
+            <span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="editor__tabs" role="tablist" aria-label="Code samples">
+              @for (s of snippets; track s.file; let i = $index) {
+                <button
+                  type="button"
+                  role="tab"
+                  class="editor__tab"
+                  [class.is-active]="tab() === i"
+                  [attr.aria-selected]="tab() === i"
+                  [attr.tabindex]="tab() === i ? 0 : -1"
+                  aria-controls="editor-panel"
+                  (click)="tab.set(i)"
+                  (keydown)="onTabKey($event)"
+                >
+                  {{ s.file }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="editor__body" id="editor-panel" role="tabpanel" [attr.aria-label]="current().file">
+            @for (s of [current()]; track s.file) {
+              <pre class="editor__code"><code>@for (line of s.lines; track $index; let n = $index) {<span class="editor__line" [style.--n]="n"><span class="editor__ln" aria-hidden="true">{{ n + 1 }}</span>@for (t of line; track $index) {<span [class]="'tk-' + t.k">{{ t.v }}</span>}</span>}</code></pre>
+            }
+          </div>
+
+          <div class="terminal" aria-label="Career as a git log">
+            <div class="terminal__bar mono">
+              <span class="terminal__tab">Terminal</span>
+              <span class="terminal__path">~/iraklis</span>
+            </div>
+            <div class="terminal__body">
+              <div class="terminal__cmd"><span class="accent">❯</span> git log --oneline</div>
+              @for (c of gitLog; track c.hash; let i = $index) {
+                <div class="terminal__line" [style.--n]="i">
+                  <span class="terminal__hash">{{ c.hash }}</span>
+                  @if (c.tag) {
+                    <span class="terminal__ref">({{ c.tag }})</span>
+                  }
+                  <span class="terminal__msg">{{ c.msg }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="editor__status mono">
+            <span><span class="editor__branch">⎇ main</span></span>
+            <span>{{ current().label }}</span>
+            <span class="editor__ok">✓ Build passing</span>
+            <span class="editor__enc">UTF-8 · LF</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Core stack ---------------------------------------------------------------->
+      <article class="tile tile--core" appSpotlight appReveal [revealDelay]="80">
+        <header class="tile__head">
+          <span class="mono tile__kicker">Core stack</span>
+          <span class="mono tile__index">A</span>
+        </header>
+        <ul class="core">
+          @for (c of core; track c.name) {
+            <li class="core__row">
+              <span class="core__name">{{ c.name }}</span>
+              <span class="core__note">{{ c.note }}</span>
+            </li>
+          }
+        </ul>
+      </article>
+
+      <!-- Python ------------------------------------------------------------------>
+      <article class="tile tile--python" appSpotlight appReveal [revealDelay]="140">
+        <header class="tile__head">
+          <span class="mono tile__kicker">Also fluent</span>
+          <span class="mono tile__index">B</span>
+        </header>
+        <div class="python">
+          <div class="python__big">Python</div>
+          <p class="python__copy">
+            <strong>{{ certs.courses.length + 1 }} certifications</strong> through the {{ certs.title }} — data
+            structures, web data, databases and visualisation.
+          </p>
+          <div class="python__chips">
+            @for (x of profile.extendedStack; track x) {
+              <span class="chip">{{ x }}</span>
+            }
+          </div>
+        </div>
+      </article>
+
+      <!-- Domains ------------------------------------------------------------------>
+      <article class="tile tile--domains" appSpotlight appReveal>
+        <header class="tile__head">
+          <span class="mono tile__kicker">Domains</span>
+          <span class="mono tile__index">C</span>
+        </header>
+        <ul class="domains">
+          @for (d of domains; track d; let i = $index) {
+            <li><span class="mono domains__n">0{{ i + 1 }}</span>{{ d }}</li>
+          }
+        </ul>
+      </article>
+
+      <!-- Languages ----------------------------------------------------------------->
+      <article class="tile tile--langs" appSpotlight appReveal [revealDelay]="80">
+        <header class="tile__head">
+          <span class="mono tile__kicker">Spoken</span>
+          <span class="mono tile__index">D</span>
+        </header>
+        <ul class="langs">
+          @for (l of languages; track l.name) {
+            <li class="langs__row">
+              <div class="langs__top">
+                <span class="langs__name">{{ l.name }}</span>
+                <span class="langs__level mono">{{ l.level }}</span>
+              </div>
+              <span class="langs__bar" aria-hidden="true"><span [style.width.%]="l.value"></span></span>
+            </li>
+          }
+        </ul>
+      </article>
+
+      <!-- Principle ---------------------------------------------------------------->
+      <article class="tile tile--principle" appReveal [revealDelay]="140">
+        <span class="mono tile__kicker">Operating principle</span>
+        <blockquote class="principle">
+          Hydroponic control loops and banking ledgers have more in common than you'd think:
+          <span class="serif">inputs, state, and the ways they fail.</span>
+        </blockquote>
+        <span class="principle__mark" aria-hidden="true">”</span>
+      </article>
+    </div>
+  </div>
+</section>

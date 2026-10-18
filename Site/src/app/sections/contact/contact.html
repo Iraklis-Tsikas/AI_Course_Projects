@@ -1,0 +1,50 @@
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="contact__glow" aria-hidden="true"></div>
+  <div class="container">
+    <app-section-head index="05" label="Contact" />
+
+    <h2 id="contact-title" class="contact__title">
+      <span class="contact__line" appReveal="line"><span class="rl">Let's build</span></span>
+      <span class="contact__line" appReveal="line" [revealDelay]="90">
+        <span class="rl"><span class="serif">something</span> that</span>
+      </span>
+      <span class="contact__line" appReveal="line" [revealDelay]="180">
+        <span class="rl">lasts<span class="accent">.</span></span>
+      </span>
+    </h2>
+
+    <div class="contact__grid">
+      <p class="lede" appReveal>
+        Have a problem worth solving, a project in mind, or just want to talk engineering and banking systems? My inbox
+        is open.
+      </p>
+      <div class="contact__actions" appReveal [revealDelay]="100">
+        <a class="btn btn--primary" appMagnetic [href]="'mailto:' + profile.email">
+          Write me an email <span class="btn__arrow">→</span>
+        </a>
+        <button type="button" class="btn" (click)="nav.copyEmail()">
+          Copy address <span class="btn__arrow" aria-hidden="true">⧉</span>
+        </button>
+      </div>
+    </div>
+
+    <ul class="channels">
+      @for (c of channels; track c.name; let i = $index) {
+        <li appReveal [revealDelay]="i * 80">
+          <a
+            class="channel"
+            [href]="c.href"
+            [attr.target]="c.external ? '_blank' : null"
+            [attr.rel]="c.external ? 'noopener' : null"
+            [attr.download]="c.download ? '' : null"
+          >
+            <span class="channel__idx mono">0{{ i + 1 }}</span>
+            <span class="channel__name">{{ c.name }}</span>
+            <span class="channel__value">{{ c.value }}</span>
+            <span class="channel__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,51 @@
+<section class="column" data-testid="column">
+  <header class="header">
+    @if (editing()) {
+      <input
+        #titleInput
+        class="title-input"
+        aria-label="Column name"
+        maxlength="40"
+        [value]="column().title"
+        (keydown.enter)="saveTitle(titleInput.value)"
+        (keydown.escape)="editing.set(false)"
+        (blur)="saveTitle(titleInput.value)"
+      />
+    } @else {
+      <button type="button" class="title" title="Rename column" (click)="editing.set(true)">
+        {{ column().title }}
+      </button>
+    }
+    <span class="count" data-testid="count">{{ column().cards.length }}</span>
+  </header>
+
+  <div
+    class="cards"
+    cdkDropList
+    [cdkDropListData]="column().id"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (card of column().cards; track card.id) {
+      <app-card cdkDrag [cdkDragData]="card" [card]="card" (delete)="store.deleteCard(column().id, card.id)">
+        <div class="placeholder" *cdkDragPlaceholder></div>
+      </app-card>
+    } @empty {
+      <p class="empty">Drop cards here</p>
+    }
+  </div>
+
+  @if (adding()) {
+    <form class="add-form" (submit)="$event.preventDefault(); addCard(cardTitle, cardDetails)" (keydown.escape)="adding.set(false)">
+      <input #cardTitle class="field" placeholder="Card title" aria-label="Card title" maxlength="80" required />
+      <textarea #cardDetails class="field" placeholder="Details (optional)" aria-label="Card details" rows="2"></textarea>
+      <div class="actions">
+        <button type="submit" class="btn-primary">Add card</button>
+        <button type="button" class="btn-ghost" (click)="adding.set(false)">Cancel</button>
+      </div>
+    </form>
+  } @else {
+    <button type="button" class="add" (click)="adding.set(true)">
+      <span aria-hidden="true">+</span> Add card
+    </button>
+  }
+</section>

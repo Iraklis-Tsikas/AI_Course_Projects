@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arena Duel</title>
+  </head>
+  <body>
+    <div id="hud">
+      <div class="bar-wrap left">
+        <div class="label">YOU</div>
+        <div class="bar"><div id="player-hp" class="fill player"></div></div>
+      </div>
+      <div id="score">0 : 0</div>
+      <div class="bar-wrap right">
+        <div class="label">BOT</div>
+        <div class="bar"><div id="enemy-hp" class="fill enemy"></div></div>
+      </div>
+    </div>
+
+    <div id="crosshair"></div>
+    <div id="hitmarker">✕</div>
+    <div id="damage"></div>
+
+    <div id="overlay">
+      <div class="panel">
+        <h1 id="overlay-title">ARENA DUEL</h1>
+        <p id="overlay-text">Defeat the bot in a 1v1 arena fight.</p>
+        <div class="controls">
+          <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move &amp; strafe</div>
+          <div><kbd>Mouse</kbd> Look around</div>
+          <div><kbd>Left click</kbd> Shoot (headshots do double damage)</div>
+          <div><kbd>Esc</kbd> Pause</div>
+        </div>
+        <p class="start">Click to start</p>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

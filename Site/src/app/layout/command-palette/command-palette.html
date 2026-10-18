@@ -1,0 +1,56 @@
+<dialog #dialog class="palette" aria-label="Command menu" (close)="palette.close()" (click)="onBackdrop($event)">
+  <div class="palette__panel">
+    <div class="palette__search">
+      <span class="palette__prompt mono" aria-hidden="true">&gt;_</span>
+      <input
+        #input
+        type="text"
+        class="palette__input"
+        placeholder="Jump to a section, copy email, switch theme…"
+        autocomplete="off"
+        spellcheck="false"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="palette-list"
+        aria-autocomplete="list"
+        [attr.aria-activedescendant]="active() ? 'cmd-' + active()!.id : null"
+        [value]="query()"
+        (input)="onInput(input.value)"
+        (keydown)="onKey($event)"
+      />
+      <kbd class="palette__esc">esc</kbd>
+    </div>
+
+    <div class="palette__list" id="palette-list" role="listbox" aria-label="Commands">
+      @for (group of groups(); track group.name) {
+        <div class="palette__group" role="group" [attr.aria-label]="group.name">
+          <div class="palette__group-label mono" aria-hidden="true">{{ group.name }}</div>
+          @for (cmd of group.items; track cmd.id) {
+            <div
+              class="palette__item"
+              role="option"
+              [id]="'cmd-' + cmd.id"
+              [class.is-active]="active() === cmd"
+              [attr.aria-selected]="active() === cmd"
+              (click)="run(cmd)"
+              (pointermove)="hover(cmd)"
+            >
+              <span class="palette__glyph mono" aria-hidden="true">{{ cmd.glyph }}</span>
+              <span class="palette__label">{{ cmd.label }}</span>
+              <span class="palette__hint">{{ cmd.hint }}</span>
+              <span class="palette__enter" aria-hidden="true">↵</span>
+            </div>
+          }
+        </div>
+      } @empty {
+        <p class="palette__empty">No commands match “{{ query() }}”.</p>
+      }
+    </div>
+
+    <div class="palette__foot mono" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> select</span>
+      <span class="palette__brand">IT<span class="accent">.</span>cmd</span>
+    </div>
+  </div>
+</dialog>

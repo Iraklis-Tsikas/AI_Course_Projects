@@ -1,0 +1,85 @@
+:root {
+  --yellow: #ecad0a;
+  --blue: #209dd7;
+  --purple: #753991;
+  --navy: #032147;
+  --gray: #888888;
+  --bg: #f4f6fa;
+  --column: #e9edf4;
+  --surface: #ffffff;
+  --border: #e3e8ef;
+  --border-strong: #cfd6e1;
+  --shadow-sm: 0 1px 2px rgba(3, 33, 71, 0.06);
+  --shadow-md: 0 6px 16px rgba(3, 33, 71, 0.1);
+  --shadow-lg: 0 18px 40px rgba(3, 33, 71, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--navy);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.btn-primary,
+.btn-ghost {
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--purple);
+  box-shadow: 0 2px 6px rgba(117, 57, 145, 0.3);
+
+  &:hover {
+    background: #64307c;
+  }
+}
+
+.btn-ghost {
+  color: var(--gray);
+  background: transparent;
+
+  &:hover {
+    color: var(--navy);
+    background: rgba(3, 33, 71, 0.06);
+  }
+}
+
+/* Drag and drop */
+.cdk-drag-preview {
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  transform: rotate(2deg);
+}
+
+.cdk-drag-preview .card {
+  cursor: grabbing;
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
