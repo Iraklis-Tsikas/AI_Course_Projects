@@ -12,6 +12,7 @@ import { NAV, PROFILE } from '../../core/content';
 import { NavigationService } from '../../core/navigation';
 import { PaletteService } from '../../core/palette';
 import { ThemeService } from '../../core/theme';
+import { TwinService } from '../../core/twin';
 
 interface Command {
   id: string;
@@ -34,6 +35,7 @@ export class CommandPalette {
   protected readonly palette = inject(PaletteService);
   private readonly nav = inject(NavigationService);
   private readonly theme = inject(ThemeService);
+  private readonly twin = inject(TwinService);
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
@@ -58,6 +60,15 @@ export class CommandPalette {
       glyph: n.index,
       run: () => this.nav.go(n.id),
     })),
+    {
+      id: 'twin',
+      label: 'Ask my Digital Twin',
+      group: 'Actions',
+      hint: 'AI chat about my career',
+      glyph: '✦',
+      keywords: 'ai chat gemini bot assistant question twin',
+      run: () => this.twin.open(),
+    },
     {
       id: 'copy-email',
       label: 'Copy email address',

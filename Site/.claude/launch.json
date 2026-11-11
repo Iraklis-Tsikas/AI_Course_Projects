@@ -3,6 +3,12 @@
   "configurations": [
     {
       "name": "site",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 4200
+    },
+    {
+      "name": "web",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["ng", "serve", "--port", "4200"],
       "port": 4200

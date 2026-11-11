@@ -3,6 +3,7 @@ import { ClockService } from '../../core/clock';
 import { PROFILE } from '../../core/content';
 import { IntroService } from '../../core/intro';
 import { NavigationService } from '../../core/navigation';
+import { TwinService } from '../../core/twin';
 import { Magnetic, Spotlight } from '../../shared/pointer-fx';
 
 @Component({
@@ -18,6 +19,7 @@ export class Hero {
   protected readonly intro = inject(IntroService);
   protected readonly clock = inject(ClockService);
   protected readonly nav = inject(NavigationService);
+  protected readonly twin = inject(TwinService);
   protected readonly profile = PROFILE;
   protected readonly firstChars = PROFILE.first.toUpperCase().split('');
   protected readonly since = PROFILE.softwareSince.slice(0, 4);

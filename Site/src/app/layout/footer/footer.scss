@@ -113,6 +113,19 @@
   font-size: 11px;
 }
 
+/* Leave room for the fixed Digital Twin launcher in the bottom-right corner. */
+@media (min-width: 601px) {
+  .footer__bottom {
+    padding-right: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer__bottom {
+    padding-bottom: 84px;
+  }
+}
+
 .footer__top {
   display: inline-flex;
   gap: 8px;

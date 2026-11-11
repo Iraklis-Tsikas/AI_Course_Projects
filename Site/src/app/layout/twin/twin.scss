@@ -1,0 +1,680 @@
+/* Digital Twin chat — global styles (ViewEncapsulation.None), every class prefixed `twin-`. */
+
+app-twin {
+  --twin-w: 420px;
+  --twin-gap: 20px;
+}
+
+/* Avatar ------------------------------------------------------------------- */
+
+.twin-avatar {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.twin-avatar--sm {
+  width: 34px;
+  height: 34px;
+  font-size: 12.5px;
+}
+
+.twin-avatar__dot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg-elev);
+}
+
+/* Launcher ------------------------------------------------------------------ */
+
+.twin-launcher {
+  position: fixed;
+  right: var(--twin-gap);
+  bottom: var(--twin-gap);
+  z-index: 140;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
+  border: 1px solid var(--line-strong);
+  color: var(--fg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  text-align: left;
+  transition:
+    transform 0.5s var(--ease-out),
+    opacity 0.35s var(--ease-out),
+    border-color 0.3s;
+  animation: twin-launch-in 0.9s var(--ease-out) 1.2s both;
+
+  &:hover {
+    border-color: var(--accent);
+
+    .twin-launcher__spark {
+      transform: rotate(90deg) scale(1.15);
+    }
+  }
+
+  &.is-hidden {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+    pointer-events: none;
+  }
+}
+
+@keyframes twin-launch-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.twin-launcher__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.twin-launcher__kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.twin-launcher__label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.twin-launcher__spark {
+  margin-left: 4px;
+  color: var(--accent);
+  font-size: 15px;
+  transition: transform 0.6s var(--ease-out);
+}
+
+/* Panel ---------------------------------------------------------------------- */
+
+.twin-panel {
+  position: fixed;
+  right: var(--twin-gap);
+  bottom: var(--twin-gap);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  width: min(var(--twin-w), calc(100vw - 2 * var(--twin-gap)));
+  height: min(660px, calc(100svh - var(--nav-h) - 2 * var(--twin-gap)));
+  background: var(--bg-elev);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    var(--shadow),
+    0 0 0 1px rgba(0, 0, 0, 0.15);
+  transform-origin: bottom right;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.97);
+  transition:
+    opacity 0.35s var(--ease-out),
+    transform 0.5s var(--ease-out),
+    visibility 0s linear 0.5s;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.35s var(--ease-out),
+      transform 0.5s var(--ease-out);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px -1px auto;
+    height: 2px;
+    background: var(--accent);
+  }
+}
+
+/* Header */
+
+.twin-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.twin-head__id {
+  flex: 1;
+  min-width: 0;
+}
+
+.twin-head__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.twin-head__badge {
+  padding: 2px 6px;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--accent-text);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.twin-head__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twin-head__dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fg-dim);
+
+  [data-tone='online'] > & {
+    background: #3ddc84;
+    box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.15);
+  }
+
+  [data-tone='busy'] > & {
+    background: var(--accent);
+    animation: twin-blink 1s steps(2) infinite;
+  }
+
+  [data-tone='offline'] > & {
+    background: #ff4d4d;
+  }
+}
+
+.twin-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  color: var(--fg-muted);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    color: var(--fg);
+    border-color: var(--fg);
+    background: var(--bg);
+  }
+}
+
+/* Body */
+
+.twin-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 18px 8px;
+  scrollbar-width: thin;
+}
+
+.twin-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 0 18px;
+}
+
+.twin-intro__kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-text);
+}
+
+.twin-intro__title {
+  font-size: 26px;
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.twin-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.twin-intro__copy {
+  color: var(--fg-muted);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.twin-notice {
+  padding: 10px 12px;
+  border-left: 2px solid #ff4d4d;
+  background: rgba(255, 77, 77, 0.08);
+  font-size: 13px;
+  color: var(--fg);
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+}
+
+.twin-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.twin-chips__label {
+  margin-bottom: 2px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.twin-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  font-size: 13.5px;
+  color: var(--fg);
+  text-align: left;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.3s var(--ease-out);
+
+  span {
+    color: var(--accent-text);
+    margin-right: 4px;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+/* Messages */
+
+.twin-msg {
+  margin-bottom: 18px;
+  animation: twin-msg-in 0.4s var(--ease-out);
+}
+
+@keyframes twin-msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.twin-msg__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.twin-msg__who {
+  color: var(--fg-muted);
+
+  &::before {
+    content: '▸ ';
+    color: var(--fg-dim);
+  }
+
+  .twin-msg--twin & {
+    color: var(--accent-text);
+
+    &::before {
+      color: var(--accent);
+    }
+  }
+}
+
+.twin-msg__time {
+  color: var(--fg-dim);
+}
+
+.twin-msg--user {
+  padding-left: 12px;
+  border-left: 2px solid var(--line-strong);
+}
+
+.twin-msg__text {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--fg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.twin-md {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+
+  p + p,
+  p + ul,
+  p + ol,
+  ul + p,
+  ol + p {
+    margin-top: 0.7em;
+  }
+
+  ul,
+  ol {
+    display: grid;
+    gap: 4px;
+    padding-left: 0;
+  }
+
+  ul > li {
+    position: relative;
+    padding-left: 16px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 0.68em;
+      width: 6px;
+      height: 2px;
+      background: var(--accent);
+    }
+  }
+
+  ol {
+    counter-reset: twin-ol;
+    list-style: none;
+
+    > li {
+      position: relative;
+      padding-left: 22px;
+      counter-increment: twin-ol;
+
+      &::before {
+        content: counter(twin-ol, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        line-height: 2.2;
+        color: var(--accent-text);
+      }
+    }
+  }
+
+  strong {
+    font-weight: 650;
+  }
+
+  a {
+    color: var(--accent-text);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+
+    &:hover {
+      border-bottom-color: var(--accent);
+    }
+  }
+
+  code {
+    padding: 1px 5px;
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+  }
+}
+
+.twin-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: twin-blink 0.9s steps(2) infinite;
+}
+
+@keyframes twin-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.twin-thinking {
+  display: inline-flex;
+  gap: 5px;
+  padding: 6px 0;
+
+  i {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    animation: twin-bounce 1s var(--ease-in-out) infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+  }
+}
+
+@keyframes twin-bounce {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+.twin-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-left: 2px solid #ff4d4d;
+  background: rgba(255, 77, 77, 0.08);
+  font-size: 13.5px;
+  color: var(--fg);
+}
+
+.twin-error__retry {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-text);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Composer */
+
+.twin-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 8px 14px 0;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: var(--fg-dim);
+  }
+}
+
+.twin-composer__input {
+  flex: 1;
+  min-width: 0;
+  max-height: 140px;
+  padding: 9px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+
+  &::placeholder {
+    color: var(--fg-dim);
+  }
+}
+
+.twin-send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  transition:
+    opacity 0.2s,
+    transform 0.3s var(--ease-out);
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+.twin-send--stop {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.twin-send__square {
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+}
+
+.twin-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* Mobile: full-screen sheet ---------------------------------------------------- */
+
+@media (max-width: 600px) {
+  app-twin {
+    --twin-gap: 14px;
+  }
+
+  .twin-launcher {
+    padding: 6px 12px 6px 6px;
+  }
+
+  .twin-launcher__kicker {
+    display: none;
+  }
+
+  .twin-panel {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    border: 0;
+    transform-origin: bottom center;
+  }
+
+  .twin-composer__input {
+    font-size: 16px; /* avoids iOS zoom-on-focus */
+  }
+}

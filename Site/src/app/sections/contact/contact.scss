@@ -57,6 +57,19 @@
   gap: 12px;
 }
 
+.btn--twin {
+  border-style: dashed;
+
+  .btn__spark {
+    color: var(--accent);
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  &:hover .btn__spark {
+    transform: rotate(90deg);
+  }
+}
+
 /* Channels ------------------------------------------------------------------- */
 
 .channels {
