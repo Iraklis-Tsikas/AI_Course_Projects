@@ -1,10 +1,15 @@
 {
   "name": "iraklis-tsikas",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently -k -n twin,web -c yellow,cyan \"npm:twin\" \"npm:web\"",
+    "web": "ng serve",
+    "twin": "node --watch-path=server --watch-path=src/app/core --watch-path=.env server/main.ts",
     "build": "ng build",
+    "serve:prod": "ng build && node server/main.ts --static",
+    "typecheck": "tsc -p server/tsconfig.json && ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -27,6 +32,8 @@
     "@angular/build": "^22.2.2",
     "@angular/cli": "^22.2.2",
     "@angular/compiler-cli": "^22.2.0",
+    "@types/node": "^24.19.2",
+    "concurrently": "^10.0.6",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2"
   }

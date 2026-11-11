@@ -11,13 +11,47 @@ npm install
 npm start
 ```
 
-Then open http://localhost:4200.
+Then open http://localhost:4200. `npm start` runs two processes side by side:
 
-Production build (output in `dist/iraklis-tsikas/browser`, deployable to any static host):
+- **web** — the Angular dev server on port 4200
+- **twin** — the Digital Twin API on port 4300 (Angular proxies `/api` to it; see `proxy.conf.json`)
+
+Production — one Node process serving the built site and the API (honours `PORT`, default 4300):
 
 ```bash
-npm run build
+npm run serve:prod
 ```
+
+`npm run build` alone produces static files in `dist/iraklis-tsikas/browser`. They work on any
+static host, but the Digital Twin chat needs the Node server (`server/`) running alongside.
+
+## Digital Twin (AI chat)
+
+Visitors can chat with an AI version of you that answers questions about your career, powered by
+**Google Gemini** (free tier).
+
+1. Get a free key at https://aistudio.google.com/apikey
+2. Put it in `.env` in the project root (see `.env.example`):
+
+   ```
+   GEMINI_API_KEY=AIza...
+   GEMINI_MODEL=gemini-2.5-flash
+   ```
+
+3. Run `npm start`. The twin server restarts by itself when `.env` changes.
+
+How it works:
+
+- The key stays on the server. The browser calls `/api/twin/chat`, and `server/main.ts` forwards the
+  conversation to Gemini and streams the reply back (server-sent events).
+- The twin only knows what's in `src/app/core/content.ts`. `server/persona.ts` builds its
+  instructions from `PROFILE`, `ROLES`, `EDUCATION`, `CERTIFICATIONS`, `CHAPTERS` and the `TWIN`
+  block. To teach it something new, add a line to `TWIN.facts` or `TWIN.story`.
+- It is told to answer in the first person, stay on career topics, never invent facts, and point
+  people to your email for anything it doesn't know.
+- Guard rails protect the free quota: 20 messages per visitor per 10 minutes, 12 requests per minute
+  overall, and limits on message length and history.
+- `GET /api/twin/health` reports whether a key is configured (never the key itself).
 
 ## Editing content
 
@@ -64,6 +98,8 @@ Add as many entries as you like; the grid adapts.
 
 ## Features
 
+- AI Digital Twin chat (Gemini), streaming replies, suggested questions, remembers the
+  conversation for the browser session
 - Terminal-style boot intro (once per session, skipped for reduced motion)
 - Interactive career map (Gantt-style) with hover read-out and jump-to-entry
 - Command menu — press <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd>

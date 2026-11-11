@@ -5,10 +5,11 @@ import { Footer } from './layout/footer/footer';
 import { Intro } from './layout/intro/intro';
 import { Nav } from './layout/nav/nav';
 import { Toast } from './layout/toast/toast';
+import { Twin } from './layout/twin/twin';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Nav, Footer, Intro, CommandPalette, Toast],
+  imports: [RouterOutlet, Nav, Footer, Intro, CommandPalette, Toast, Twin],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a class="skip-link" href="#main">Skip to content</a>
@@ -18,6 +19,7 @@ import { Toast } from './layout/toast/toast';
       <router-outlet />
     </main>
     <app-footer />
+    <app-twin />
     <app-command-palette />
     <app-toast />
   `,

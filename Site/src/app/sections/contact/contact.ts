@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PROFILE } from '../../core/content';
 import { NavigationService } from '../../core/navigation';
+import { TwinService } from '../../core/twin';
 import { Magnetic } from '../../shared/pointer-fx';
 import { Reveal } from '../../shared/reveal';
 import { SectionHead } from '../../shared/section-head/section-head';
@@ -14,6 +15,7 @@ import { SectionHead } from '../../shared/section-head/section-head';
 })
 export class Contact {
   protected readonly nav = inject(NavigationService);
+  protected readonly twin = inject(TwinService);
   protected readonly profile = PROFILE;
 
   protected readonly channels = [

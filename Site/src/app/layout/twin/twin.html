@@ -1,0 +1,162 @@
+<button
+  type="button"
+  class="twin-launcher"
+  [class.is-hidden]="twin.isOpen() || overHero()"
+  [attr.tabindex]="twin.isOpen() || overHero() ? -1 : null"
+  (click)="twin.open()"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="twin.isOpen()"
+  aria-controls="twin-panel"
+>
+  <span class="twin-avatar twin-avatar--sm" aria-hidden="true"
+    >IT<span class="twin-avatar__dot"></span
+  ></span>
+  <span class="twin-launcher__text">
+    <span class="twin-launcher__kicker">AI · Digital Twin</span>
+    <span class="twin-launcher__label">Ask about my career</span>
+  </span>
+  <span class="twin-launcher__spark" aria-hidden="true">✦</span>
+</button>
+
+<section
+  id="twin-panel"
+  class="twin-panel"
+  [class.is-open]="twin.isOpen()"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="twin-title"
+  [attr.inert]="twin.isOpen() ? null : ''"
+>
+  <header class="twin-head">
+    <span class="twin-avatar" aria-hidden="true">IT<span class="twin-avatar__dot"></span></span>
+    <div class="twin-head__id">
+      <h2 id="twin-title" class="twin-head__title">
+        Digital Twin <span class="twin-head__badge">AI</span>
+      </h2>
+      <span class="twin-head__status" [attr.data-tone]="status().tone">
+        <span class="twin-head__dot" aria-hidden="true"></span>{{ status().text }}
+      </span>
+    </div>
+    @if (twin.hasConversation()) {
+      <button
+        type="button"
+        class="twin-icon"
+        (click)="twin.reset()"
+        title="New conversation"
+        aria-label="Start a new conversation"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" />
+        </svg>
+      </button>
+    }
+    <button type="button" class="twin-icon" (click)="twin.close()" aria-label="Close chat">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </header>
+
+  <div class="twin-body" #scroller (scroll)="onScroll(scroller)">
+    @if (!twin.hasConversation()) {
+      <div class="twin-intro">
+        <span class="twin-intro__kicker">// trained on {{ profile.first }}'s career</span>
+        <p class="twin-intro__title">
+          Ask me anything about my <span class="twin-serif">career</span>.
+        </p>
+        <p class="twin-intro__copy">{{ greeting }}</p>
+
+        @if (twin.availability() === 'unconfigured') {
+          <p class="twin-notice">
+            The AI isn't connected yet — add a Gemini API key to <code>.env</code> and restart the
+            server.
+          </p>
+        }
+
+        <div class="twin-chips">
+          <span class="twin-chips__label">Try asking</span>
+          @for (s of suggestions; track s) {
+            <button type="button" class="twin-chip" (click)="ask(s)" [disabled]="twin.busy()">
+              <span aria-hidden="true">↳</span> {{ s }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @for (m of twin.messages(); track m.id) {
+      <article
+        class="twin-msg"
+        [class.twin-msg--user]="m.role === 'user'"
+        [class.twin-msg--twin]="m.role === 'model'"
+      >
+        <header class="twin-msg__head">
+          <span class="twin-msg__who">{{ m.role === 'user' ? 'You' : 'Twin' }}</span>
+          <time class="twin-msg__time">{{ m.time }}</time>
+        </header>
+        @if (m.role === 'model') {
+          @if (m.text || m.streaming) {
+            <div class="twin-md" [innerHTML]="render(m.text, m.streaming)"></div>
+          }
+          @if (m.streaming && !m.text) {
+            <span class="twin-thinking" aria-label="Thinking"><i></i><i></i><i></i></span>
+          }
+          @if (m.error) {
+            <div class="twin-error" role="alert">
+              <span>{{ m.error }}</span>
+              @if ($last) {
+                <button type="button" class="twin-error__retry" (click)="twin.retry()">
+                  Retry ↻
+                </button>
+              }
+            </div>
+          }
+        } @else {
+          <p class="twin-msg__text">{{ m.text }}</p>
+        }
+      </article>
+    }
+  </div>
+
+  <form class="twin-composer" (submit)="submit($event)">
+    <textarea
+      #input
+      class="twin-composer__input"
+      rows="1"
+      maxlength="1000"
+      placeholder="Ask about my roles, stack, education…"
+      aria-label="Message the digital twin"
+      [value]="draft()"
+      (input)="onInput(input)"
+      (keydown)="onKey($event)"
+    ></textarea>
+    @if (twin.busy()) {
+      <button
+        type="button"
+        class="twin-send twin-send--stop"
+        (click)="twin.stop()"
+        aria-label="Stop generating"
+      >
+        <span class="twin-send__square" aria-hidden="true"></span>
+      </button>
+    } @else {
+      <button
+        type="submit"
+        class="twin-send"
+        [disabled]="!draft().trim()"
+        aria-label="Send message"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+      </button>
+    }
+  </form>
+
+  <p class="twin-foot">
+    <span>AI-generated · may be inaccurate</span>
+    <span>{{ modelLabel() }}</span>
+  </p>
+
+  <div class="visually-hidden" aria-live="polite">{{ announcement() }}</div>
+</section>

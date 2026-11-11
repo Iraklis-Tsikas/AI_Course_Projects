@@ -13,6 +13,11 @@
       <span class="live-dot"></span>
       <span>Now — {{ profile.role }} at <strong>{{ profile.company }}</strong></span>
     </span>
+    <button type="button" class="pill hero__ask" (click)="twin.open()">
+      <span class="hero__ask-spark" aria-hidden="true">✦</span>
+      Ask my AI twin
+      <span class="hero__ask-kbd" aria-hidden="true">→</span>
+    </button>
     <span class="hero__edition mono">Portfolio / Vol. {{ year }}</span>
   </div>
 
